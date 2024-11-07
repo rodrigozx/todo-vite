@@ -1,35 +1,52 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import "./App.css";
+
+import TodoForm from "./components/TodoForm";
+import TodoItem from "./components/TodoItem";
+
+const todosDefaults = [
+  { text: "Learn about React", isCompleted: false },
+  { text: "Meet friend for lunch", isCompleted: true },
+  { text: "Build really cool todo app", isCompleted: false },
+];
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [todos, setTodos] = useState(todosDefaults);
+
+  const addTodo = (text) => {
+    const newTodos = [...todos, { text }];
+    setTodos(newTodos);
+  };
+
+  const toggleCompleted = (index) => {
+    const newTodos = [...todos];
+    newTodos[index].isCompleted = !newTodos[index].isCompleted;
+    setTodos(newTodos);
+  };
+
+  const deleteTodo = (index) => {
+    const newTodos = [...todos];
+    newTodos.splice(index, 1);
+    setTodos(newTodos);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="App">
+      <h1>Todo Vite</h1>
+      <TodoForm addTodo={addTodo} />
+      <div className="todo-list">
+        {todos.map((todo, index) => (
+          <TodoItem
+            key={index}
+            index={index}
+            todo={todo}
+            toggleCompleted={toggleCompleted}
+            deleteTodo={deleteTodo}
+          />
+        ))}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;
